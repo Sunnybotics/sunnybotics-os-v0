@@ -1,7 +1,7 @@
 # SunnyboticsOS V0 — Integration Handoff
-### Avinash → Abdel
+### OS Core → Machine Layer
 
-> **TL;DR:** I built the OS Core (FastAPI + SQLite + Dashboard). You built the machine layer (ROS 2). This doc tells you exactly how to connect them on your WSL and run a full end-to-end test.
+> **TL;DR:** The OS Core (FastAPI + SQLite + Dashboard) and the machine layer (ROS 2) are developed as separate components. This doc explains exactly how to connect them on WSL and run a full end-to-end test.
 
 ---
 
@@ -9,7 +9,7 @@
 
 ```
 ┌──────────────────────────────────────────────────────┐
-│  AVINASH'S LAYER — runs on Windows (or anywhere)     │
+│  OS CORE LAYER — runs on Windows (or anywhere)       │
 │                                                      │
 │  os_core/main.py      — FastAPI on port 9000         │
 │  os_core/database.py  — SQLite persistence           │
@@ -20,7 +20,7 @@
 └──────────────────────┬───────────────────────────────┘
                        │  HTTP  (both directions)
 ┌──────────────────────▼───────────────────────────────┐
-│  ABDEL'S LAYER — runs on WSL (needs ROS 2)           │
+│  MACHINE LAYER — runs on WSL (needs ROS 2)           │
 │                                                      │
 │  sunnybotics_adapter  — REST↔ROS2 bridge (port 8001) │
 │  sunnybotics_machines — rover_01 + rover_02 (sim)    │
@@ -30,7 +30,7 @@
 
 ---
 
-## What Avinash Built — File by File
+## What the OS Core Layer Provides — File by File
 
 ### `os_core/main.py` — The OS Core (FastAPI)
 The brain of SunnyboticsOS. This is the server your adapter talks to.
@@ -81,7 +81,7 @@ A pure Python mock of your adapter — no ROS 2. I use this to test on Windows w
 
 ## How the Push Flow Works
 
-When your adapter starts and connects to `--os-url http://<avinash-ip>:9000`:
+When your adapter starts and connects to `--os-url http://<os-core-ip>:9000`:
 
 ```
 1. rover_01 starts publishing MachineState.msg at 1 Hz
@@ -115,7 +115,7 @@ When your adapter starts and connects to `--os-url http://<avinash-ip>:9000`:
 ### Prerequisites
 - ROS 2 Humble or Iron installed in WSL
 - Python packages: `fastapi uvicorn httpx` (already in your adapter dependencies)
-- The repo cloned: `git clone https://github.com/avinashmahuuroliya/sunnyboticsosV0`
+- The repo cloned: `git clone https://github.com/spuentesdev/sunnybotics-os-v0`
 
 ---
 
@@ -159,13 +159,13 @@ curl http://localhost:8001/api/v0/machines
 
 **Option B — With OS Core push enabled (the real integration test):**
 ```bash
-# Replace <avinash-ip> with Avinash's IP (or 172.x.x.x WSL gateway IP if same machine)
-python -m sunnybotics_adapter.main --os-url http://<avinash-ip>:9000
+# Replace <os-core-ip> with the OS Core host IP (or 172.x.x.x WSL gateway IP if same machine)
+python -m sunnybotics_adapter.main --os-url http://<os-core-ip>:9000
 ```
 
 Expected output when OS push is enabled:
 ```
-OS client -> http://<avinash-ip>:9000/api/v0 (push mode enabled)
+OS client -> http://<os-core-ip>:9000/api/v0 (push mode enabled)
 adapter up -- watching for /machines/<id>/state, no machine list configured anywhere
 discovered machine 'rover_01' on /machines/rover_01/state
 'rover_01' registered with the OS (201)
@@ -178,7 +178,7 @@ discovered machine 'rover_02' on /machines/rover_02/state
 ### Step 4 — Verify machines appeared on OS Core
 
 ```bash
-curl http://<avinash-ip>:9000/api/v0/machines
+curl http://<os-core-ip>:9000/api/v0/machines
 ```
 
 Expected:
@@ -198,7 +198,7 @@ Expected:
 
 ```bash
 # Dispatch a CLEANING mission
-curl -X POST http://<avinash-ip>:9000/api/v0/missions \
+curl -X POST http://<os-core-ip>:9000/api/v0/missions \
   -H "Content-Type: application/json" \
   -d '{"capability_required":"CLEANING","objective":"clean row 3","parameters":{"target_x":15.0,"target_y":10.0,"simulate_failure":false}}'
 ```
@@ -220,7 +220,7 @@ Expected response (201):
 
 ```bash
 # Poll mission state
-curl http://<avinash-ip>:9000/api/v0/missions/msn-abc12345
+curl http://<os-core-ip>:9000/api/v0/missions/msn-abc12345
 ```
 
 You should see `state` change:
@@ -233,7 +233,7 @@ ASSIGNED → RUNNING → (progress_percent: 10, 20, 30...) → COMPLETED
 ### Step 7 — Test failure path
 
 ```bash
-curl -X POST http://<avinash-ip>:9000/api/v0/missions \
+curl -X POST http://<os-core-ip>:9000/api/v0/missions \
   -H "Content-Type: application/json" \
   -d '{"capability_required":"CLEANING","objective":"clean row 5","parameters":{"simulate_failure":true}}'
 ```
@@ -246,12 +246,12 @@ Expected: mission reaches 60% progress then goes to `EXCEPTION` with `OBSTACLE_D
 
 ```bash
 # Dispatch first mission (rover_01 now RUNNING)
-curl -X POST http://<avinash-ip>:9000/api/v0/missions \
+curl -X POST http://<os-core-ip>:9000/api/v0/missions \
   -H "Content-Type: application/json" \
   -d '{"capability_required":"CLEANING","objective":"mission A"}'
 
 # Immediately dispatch second CLEANING mission while rover_01 is still running
-curl -X POST http://<avinash-ip>:9000/api/v0/missions \
+curl -X POST http://<os-core-ip>:9000/api/v0/missions \
   -H "Content-Type: application/json" \
   -d '{"capability_required":"CLEANING","objective":"mission B"}'
 ```
@@ -266,7 +266,7 @@ Expected: second dispatch returns `409` with:
 ### Step 9 — Verify full audit log
 
 ```bash
-curl http://<avinash-ip>:9000/api/v0/missions/msn-abc12345/events
+curl http://<os-core-ip>:9000/api/v0/missions/msn-abc12345/events
 ```
 
 Should show every state transition logged: CREATED → ASSIGNED → RUNNING (via reports) → COMPLETED.
@@ -275,7 +275,7 @@ Should show every state transition logged: CREATED → ASSIGNED → RUNNING (via
 
 ## Network Setup (If Running on Same Machine)
 
-If Avinash runs OS Core on Windows and you run the adapter on WSL on the same laptop:
+If the OS Core runs on Windows and the adapter runs on WSL on the same laptop:
 
 ```bash
 # Find WSL gateway IP (your Windows IP from WSL perspective)
@@ -321,7 +321,7 @@ python -m sunnybotics_adapter.main --os-url http://192.168.x.x:9000
 
 ## Running the Dashboard
 
-Avinash runs this on Windows (requires internet browser):
+Run this on the OS Core host, on Windows (requires internet browser):
 
 ```
 http://localhost:8501
@@ -352,5 +352,5 @@ This is already implemented in your rest_api.py.
 
 ---
 
-*Avinash Maharoliya · SunnyboticsOS V0 · September 2026*  
-*Repo: https://github.com/avinashmahuuroliya/sunnyboticsosV0*
+*Sunnybotics · SunnyboticsOS V0 · September 2026*  
+*Repo: https://github.com/spuentesdev/sunnybotics-os-v0*

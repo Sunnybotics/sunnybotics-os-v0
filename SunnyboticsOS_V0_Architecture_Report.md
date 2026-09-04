@@ -1,6 +1,6 @@
 # SunnyboticsOS v0 — Technical Architecture & Sprint Report
 
-> **Authors:** Avinash Maharoliya · Abdel (Robotics)  
+> **Author:** Sunnybotics  
 > **Date:** September 2026  
 > **Sprint:** Task 1 — First Operating Layer  
 > **Status:** 🔨 Active — Integrated & Verified (ROS 2 Jazzy + OS Core)
@@ -16,8 +16,8 @@
 5. [Common Machine Interface (CMI)](#5-common-machine-interface-cmi)
 6. [Mission State Machine](#6-mission-state-machine)
 7. [Tiered Machine Selection & Dynamic Physics](#7-tiered-machine-selection--dynamic-physics)
-8. [Avinash — OS Core & Dashboard](#8-avinash--os-core--dashboard)
-9. [Abdel — ROS 2 Layer (Adapter + Machine Nodes)](#9-abdel--ros-2-layer-adapter--machine-nodes)
+8. [OS Core & Dashboard](#8-os-core--dashboard)
+9. [ROS 2 Layer (Adapter + Machine Nodes)](#9-ros-2-layer-adapter--machine-nodes)
 10. [Adapter REST API Contract](#10-adapter-rest-api-contract)
 11. [OS Core REST API Contract](#11-os-core-rest-api-contract)
 12. [One-Command Pipeline (run.sh)](#12-one-command-pipeline-runsh)
@@ -84,7 +84,7 @@ Different machines. One common interface. One operating layer. Mission in. Execu
 │   │  (Streamlit)    │◀────│  (FastAPI service)    │◀────│  (machines,     │ │
 │   │  port 8501      │     │  port 9000           │     │   missions,     │ │
 │   └─────────────────┘     └──────────┬───────────┘     │   events)       │ │
-│         Owner: Avinash                │                 └─────────────────┘ │
+│         Owner: Sunnybotics            │                 └─────────────────┘ │
 │         Tech: FastAPI + SQLite        │                                      │
 └──────────────────────────────────────┼──────────────────────────────────────┘
                                         │
@@ -103,7 +103,7 @@ Different machines. One common interface. One operating layer. Mission in. Execu
 │   │  • Dispatches ROS 2 Action Goal to target machine                    │  │
 │   │  • Streams ROS feedback/result reports back to OS Core               │  │
 │   └─────────────────────────────┬───────────────────────────────────────┘  │
-│         Owner: Abdel             │ ROS 2 (DDS)                              │
+│         Owner: Sunnybotics       │ ROS 2 (DDS)                              │
 │         Tech: FastAPI + rclpy    │ ROS 2 Jazzy                              │
 └──────────────────────────────────┼───────────────────────────────────────────┘
                                     │
@@ -118,7 +118,7 @@ Different machines. One common interface. One operating layer. Mission in. Execu
 │   │  Cap:  [CLEANING]    │                 │  Cap:  [INSPECTION]  │           │
 │   │  [SIMULATED]         │                 │  [SIMULATED]         │           │
 │   └──────────────────────┘                 └──────────────────────┘           │
-│         Owner: Abdel                                                           │
+│         Owner: Sunnybotics                                                     │
 │         Tech:  rclpy + ROS 2 Action Server                                    │
 └────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -269,7 +269,7 @@ string status_message
 
 ---
 
-## 8. Avinash — OS Core & Dashboard
+## 8. OS Core & Dashboard
 
 ### Tech Stack
 - **FastAPI** (Async Python 3.9+)
@@ -289,7 +289,7 @@ dashboard/
 
 ---
 
-## 9. Abdel — ROS 2 Layer (Adapter + Machine Nodes)
+## 9. ROS 2 Layer (Adapter + Machine Nodes)
 
 ### Tech Stack
 - **ROS 2 Jazzy** / Python 3.12 / Ubuntu 24.04
@@ -342,7 +342,7 @@ machine-layer/
 
 ## 12. One-Command Pipeline (run.sh)
 
-Abdel provided an automated runner script for the full stack:
+Sunnybotics provides an automated runner script for the full stack:
 
 ```bash
 # Start all 4 processes (OS Core, Machines, Adapter, Dashboard)
@@ -383,4 +383,4 @@ Phase 5 (Future): Multi-Robot Fleet Coordination & Autonomous Solar Site
 ---
 
 *SunnyboticsOS Sprint 1 · September 2026*  
-*Avinash Maharoliya (OS Core / Platform) · Abdel (Robotics / ROS 2)*
+*Sunnybotics*

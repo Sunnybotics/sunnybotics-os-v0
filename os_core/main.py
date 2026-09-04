@@ -3,7 +3,7 @@ os_core/main.py  — SunnyboticsOS Core FastAPI application
 
 Two sets of endpoints:
 
-  PUSH (Abdel's adapter calls these):
+  PUSH (the machine adapter calls these):
     POST  /api/v0/machines/register           — machine announces itself
     PATCH /api/v0/machines/{id}/status        — heartbeat with partial state
     POST  /api/v0/missions/{id}/report        — mission progress / completion
@@ -17,7 +17,7 @@ Two sets of endpoints:
     GET   /api/v0/machines/{id}               — single machine
     GET   /health                             — liveness
 
-Port: 9000  (Abdel's stub runs on 9000, so we match it)
+Port: 9000  (the machine-layer stub runs on 9000, so we match it)
 """
 from __future__ import annotations
 
@@ -130,13 +130,13 @@ class MissionRequest(BaseModel):
     parameters:          Dict[str, Any] = Field(default_factory=dict)
 
 
-# ── ADAPTER_URL: where the adapter (Abdel's) is running ──────────────────────
+# ── ADAPTER_URL: where the adapter (machine layer) is running ────────────────
 import os
 ADAPTER_URL = os.environ.get("ADAPTER_URL", "http://localhost:8001")
 
 
 # =============================================================================
-# PUSH endpoints — Abdel's adapter calls these
+# PUSH endpoints — the machine adapter calls these
 # =============================================================================
 
 @app.post(f"{API_PREFIX}/machines/register", status_code=201)

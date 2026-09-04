@@ -10,7 +10,7 @@
 
 ```
 ┌────────────────────────────────────┐
-│  SunnyboticsOS Core  (port 9000)   │  ← Avinash
+│  SunnyboticsOS Core  (port 9000)   │  ← Sunnybotics
 │  FastAPI + SQLite                   │
 │  • Receives machine registrations   │
 │  • Tracks mission state             │
@@ -18,7 +18,7 @@
 └────────────────┬───────────────────┘
                  │  HTTP (push + pull)
 ┌────────────────▼───────────────────┐
-│  Machine Adapter   (port 8001)      │  ← Abdel
+│  Machine Adapter   (port 8001)      │  ← Sunnybotics
 │  FastAPI + rclpy                    │
 │  • Tier 1+2 machine filtering       │
 │  • Dispatches ROS 2 Action goals    │
@@ -26,7 +26,7 @@
 └────────────────┬───────────────────┘
                  │  ROS 2 Actions + MachineState.msg
 ┌────────────────▼───────────────────┐
-│  Machine Nodes  (rover_01, rover_02)│  ← Abdel
+│  Machine Nodes  (rover_01, rover_02)│  ← Sunnybotics
 │  rclpy + [SIMULATED]                │
 └────────────────────────────────────┘
 ```
@@ -57,7 +57,7 @@ pip install -r os_core/requirements.txt
 pip install streamlit   # for the dashboard
 ```
 
-### 2 — Start the OS Core (Avinash's layer)
+### 2 — Start the OS Core
 
 ```bash
 python -m uvicorn os_core.main:app --host 0.0.0.0 --port 9000
@@ -65,7 +65,7 @@ python -m uvicorn os_core.main:app --host 0.0.0.0 --port 9000
 
 Check: http://localhost:9000/health
 
-### 3 — Start Abdel's Adapter + Machine Nodes (separate terminal, needs ROS 2; developed on Jazzy, Humble/Iron should also work)
+### 3 — Start the Adapter + Machine Nodes (separate terminal, needs ROS 2; developed on Jazzy, Humble/Iron should also work)
 
 ```bash
 cd machine-layer
@@ -94,7 +94,7 @@ Open: http://localhost:8501
 Point the adapter at the OS stub and test the push endpoints:
 
 ```bash
-# Instead of step 3, run Abdel's os_stub.py which mirrors the OS Core API
+# Instead of step 3, run os_stub.py, which mirrors the OS Core API
 python machine-layer/tools/os_stub.py --port 9000
 
 # Then run the adapter standalone
@@ -166,7 +166,7 @@ sunnyboticsosV0/
 ├── dashboard/
 │   └── app.py           # Streamlit real-time dashboard
 │
-├── machine-layer/       # Abdel's ROS 2 layer
+├── machine-layer/       # ROS 2 machine layer
 │   ├── src/
 │   │   ├── sunnybotics_cmi/        # MachineState.msg + Mission.action
 │   │   ├── sunnybotics_adapter/    # REST↔ROS2 bridge
@@ -179,4 +179,16 @@ sunnyboticsosV0/
 
 ---
 
-*SunnyboticsOS V0 · September 2026 · Avinash Maharoliya + Abdel*
+*SunnyboticsOS V0 · September 2026 · Sunnybotics*
+
+---
+
+## Participants
+
+Project owned and published by **Sunnybotics**. Contributions to SunnyboticsOS V0:
+
+| Participant | Role |
+|---|---|
+| Santiago Puentes | Mentor — Sunnybotics |
+| Avinash Maharoliya | Participant — OS Core / platform |
+| Abdel | Participant — robotics / ROS 2 layer |
