@@ -7,6 +7,28 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 
+## Contents
+
+- [Overview](#overview)
+- [Scope of this release](#scope-of-this-release)
+- [Architecture](#architecture)
+  - [Dispatch sequence](#dispatch-sequence)
+- [Common Machine Interface](#common-machine-interface)
+- [Quick start](#quick-start)
+  - [Prerequisites](#prerequisites)
+  - [Single command](#single-command)
+  - [Manual startup](#manual-startup)
+  - [Dispatching a mission](#dispatching-a-mission)
+  - [Running without ROS 2](#running-without-ros-2)
+- [OS Core API](#os-core-api)
+- [Implementation notes](#implementation-notes)
+  - [Data model](#data-model)
+  - [Concurrency model](#concurrency-model)
+- [Project structure](#project-structure)
+- [Roadmap](#roadmap)
+- [Documentation](#documentation)
+- [License](#license)
+
 ---
 
 ## Overview
@@ -248,9 +270,7 @@ curl -X POST http://localhost:9000/api/v0/missions \
 
 The request specifies a capability, not a machine.
 
----
-
-## Running without ROS 2
+### Running without ROS 2
 
 The machine layer includes a stub that mirrors the OS Core API, which allows the
 adapter and the HTTP contract to be exercised on a host with no ROS 2
@@ -294,7 +314,9 @@ adapter exposes its own REST surface on port 8001, documented in
 
 ---
 
-## Data model
+## Implementation notes
+
+### Data model
 
 SQLite, three tables, indexed on the columns the dashboard filters by.
 
@@ -308,9 +330,7 @@ SQLite, three tables, indexed on the columns the dashboard filters by.
 timestamp for each transition, which reduces post-hoc analysis of a failed
 mission to a query rather than a log-reading exercise.
 
----
-
-## Concurrency model
+### Concurrency model
 
 `rclpy` spins on a background thread while FastAPI serves on the main thread.
 Every attribute reachable from both is guarded by a lock, and the FastAPI
