@@ -1,0 +1,49 @@
+# =============================================================================
+# Mission -- dispatch one unit of work to one machine.
+# =============================================================================
+# Served at /machines/<machine_id>/execute_mission.
+#
+# This is an action rather than a topic or a service because a mission already
+# has exactly the shape an action has: it is accepted or rejected up front, it
+# runs for a long time, it reports progress while it runs, it can be cancelled,
+# and it ends in exactly one terminal outcome. A service call would block for
+# the whole mission; a topic would give no acknowledgement and no result.
+#
+# It maps 1:1 onto the OS lifecycle:  Dispatch -> Running -> Completed | Exception
+# =============================================================================
+
+# ---- Goal -------------------------------------------------------------------
+# Assigned by the OS. Echoed back in MachineState.current_mission_id so the
+# fleet view and the mission view can be joined without guessing.
+string mission_id
+
+# The capability this mission needs, matched against MachineState.capabilities.
+# Sent even though the OS already matched on it, so the machine can refuse work
+# it cannot do rather than trusting the dispatcher blindly.
+string capability_required
+
+# Human-readable statement of intent, e.g. "clean aisle 3".
+string objective
+
+# Everything type-specific, as a JSON object string. This is the escape hatch
+# that keeps the interface stable: a new machine type invents new keys in here
+# instead of new fields in this file.
+string parameters_json
+---
+# ---- Result -----------------------------------------------------------------
+uint8 RESULT_COMPLETED = 0
+uint8 RESULT_EXCEPTION = 1
+uint8 result_state
+
+# Machine-readable failure code, e.g. "OBSTACLE_DETECTED". Empty on success.
+string error_code
+
+# Human-readable summary of how it went, for logs and operators.
+string message
+
+# Type-specific results, as a JSON object string. Mirrors parameters_json.
+string result_json
+---
+# ---- Feedback ---------------------------------------------------------------
+uint8 progress_percent
+string status_message

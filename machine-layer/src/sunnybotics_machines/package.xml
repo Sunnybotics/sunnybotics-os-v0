@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>sunnybotics_machines</name>
+  <version>0.1.0</version>
+  <description>
+    SIMULATED machines for SunnyboticsOS V0. One reusable node class that
+    speaks the Common Machine Interface, instantiated as a cleaning rover and
+    an inspection rover. Nothing in here touches hardware; it exists so the OS
+    and the adapter can be exercised end to end before any robot exists.
+  </description>
+  <maintainer email="maintainers@sunnybotics.invalid">SunnyboticsOS Machine Layer</maintainer>
+  <license>Apache-2.0</license>
+
+  <depend>rclpy</depend>
+  <depend>sunnybotics_cmi</depend>
+  <depend>rcl_interfaces</depend>
+
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ros2launch</exec_depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
