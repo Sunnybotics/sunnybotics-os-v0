@@ -719,7 +719,7 @@ Be clear about this before building on it.
 
 **Simulated — every number is invented:**
 
-| Field | Behaviour |
+| Field | Behavior |
 |---|---|
 | `seq` | +1 per publish |
 | `battery_percent` | −0.05/tick while `RUNNING`, −0.01/tick idle; never goes below 0 |
@@ -906,7 +906,7 @@ itself and pushes. Point it at the OS and it does both:
 ros2 run sunnybotics_adapter adapter --os-url http://<os-host>:9000
 ```
 
-With no `--os-url` nothing is pushed and the behaviour is exactly as documented
+With no `--os-url` nothing is pushed and the behavior is exactly as documented
 above, so this costs nothing while the OS side does not exist yet.
 
 Three calls are made, matching the OS-side contract:
@@ -983,7 +983,7 @@ discovered later:
 a consumer cannot draw a progress bar from `RUNNING` then `COMPLETED` alone, and
 an unrecognised key is cheap to ignore.
 
-### Behaviour when the OS is down
+### Behavior when the OS is down
 
 Pushing never blocks the ROS side. Sends are queued and drained by one
 background thread, so a slow or absent OS delays telemetry but can never stall

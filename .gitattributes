@@ -1,0 +1,6 @@
+# Shell scripts must stay LF; CRLF breaks the shebang on Linux and WSL.
+*.sh text eol=lf
+
+# ROS 2 interface definitions are parsed by rosidl; keep them normalized.
+*.msg text eol=lf
+*.action text eol=lf

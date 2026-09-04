@@ -25,9 +25,7 @@ import json
 import logging
 import uuid
 from datetime import datetime, timezone
-from typing import Any
-
-from typing import Optional, Dict, List
+from typing import Any, Dict, List, Optional
 
 import httpx
 from fastapi import FastAPI, HTTPException
@@ -39,7 +37,7 @@ from os_core.database import (
     upsert_machine, patch_machine_status,
     get_all_machines, get_machine,
     insert_mission, update_mission,
-    get_all_missions, get_mission, get_active_mission_ids,
+    get_all_missions, get_mission,
     add_mission_event, get_mission_events,
 )
 
