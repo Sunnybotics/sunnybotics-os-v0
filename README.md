@@ -370,19 +370,11 @@ fleet depends on it is expensive. Revising it now costs nothing.
 
 ---
 
-## Team
-
-Built and maintained by Sunnybotics.
-
-| Engineer | Area |
-|---|---|
-| Santiago Puentes | Engineering lead |
-| Avinash Maharoliya | OS Core and platform |
-| Abdel | Robotics, ROS 2 machine layer |
-
 ## License
 
 Apache License 2.0. See [LICENSE](LICENSE).
+
+Built and maintained by Sunnybotics.
 
 ---
 
