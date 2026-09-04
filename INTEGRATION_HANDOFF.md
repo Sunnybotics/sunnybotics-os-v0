@@ -115,7 +115,7 @@ When your adapter starts and connects to `--os-url http://<os-core-ip>:9000`:
 ### Prerequisites
 - ROS 2 Humble or Iron installed in WSL
 - Python packages: `fastapi uvicorn httpx` (already in your adapter dependencies)
-- The repo cloned: `git clone https://github.com/spuentesdev/sunnybotics-os-v0`
+- The repo cloned: `git clone https://github.com/Sunnybotics/sunnybotics-os-v0`
 
 ---
 
@@ -353,4 +353,4 @@ This is already implemented in your rest_api.py.
 ---
 
 *Sunnybotics · SunnyboticsOS V0 · September 2026*  
-*Repo: https://github.com/spuentesdev/sunnybotics-os-v0*
+*Repo: https://github.com/Sunnybotics/sunnybotics-os-v0*
