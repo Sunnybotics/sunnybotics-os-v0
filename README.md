@@ -53,7 +53,8 @@ which components run production logic and which are stubbed.
 
 The orchestration path and the ROS 2 loop execute the same way they would
 against hardware. What is stubbed is the pair of machines behind the action
-server.
+server. The machine layer documents the simulation boundary fault by fault in
+[What is simulated, and what is not](machine-layer/README.md#what-is-simulated-and-what-is-not).
 
 ---
 
@@ -127,7 +128,9 @@ machine-layer/src/sunnybotics_cmi/
 ```
 
 The design decisions behind them are documented here because they constrain
-every machine type added later.
+every machine type added later. This section is the summary; the field-level
+reference lives in [The contract](machine-layer/README.md#the-contract) and the
+full rationale in [Design decisions and why](machine-layer/README.md#design-decisions-and-why).
 
 **A mission is modeled as an action rather than a service or a topic.** Missions
 have the lifetime characteristics of an action: accepted or rejected up front,
@@ -161,7 +164,8 @@ origin and one with no position fix.
 **Type-specific payloads travel as JSON strings** (`parameters_json`,
 `result_json`). New machine types introduce new keys inside those payloads
 instead of new fields in the contract, which keeps the interface stable as the
-fleet diversifies.
+fleet diversifies. For a worked example of onboarding a new machine type, see
+[Adding a new machine type](machine-layer/README.md#adding-a-new-machine-type).
 
 ---
 
@@ -284,7 +288,9 @@ python -m sunnybotics_adapter.main
 | `GET` | `/api/v0/machines/{id}` | A single machine |
 | `GET` | `/health` | Liveness check |
 
-FastAPI serves interactive documentation at <http://localhost:9000/docs>.
+FastAPI serves interactive documentation at <http://localhost:9000/docs>. The
+adapter exposes its own REST surface on port 8001, documented in
+[REST API reference](machine-layer/README.md#rest-api-reference).
 
 ---
 

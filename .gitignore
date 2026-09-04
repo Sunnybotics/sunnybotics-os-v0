@@ -20,7 +20,8 @@ __pycache__/
 venv/
 env/
 
-# --- run logs from the demo and verification harnesses ------------------------
+# --- run logs from run.sh, the demo and the verification harnesses -----------
+logs/
 .demo_logs/
 .diag_logs/
 .claim_logs/
